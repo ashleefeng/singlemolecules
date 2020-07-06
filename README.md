@@ -1,3 +1,2 @@
-# singlemolecules
-in vitro single-molecule data analysis \
+# in vitro single-molecule imaging data analysis
 Please see subfolders for scripts and detailed instructions
