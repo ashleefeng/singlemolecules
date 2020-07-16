@@ -3,9 +3,8 @@ pro smb_analyze_all_3alex
 
 	; Custumizing parameters
 	windows_close = 'no'
-	path = 'E:\Ashlee\Lab-Data_local\SWR1\190924_iNuc_flow\7_flow_10nM_SWR1_20nM_newZB\reaction flow\'
-	;path = 'W:\PFV_IN\3_10'
-	mapfile = 'E:\Ashlee\Lab-Data_local\SWR1\190924_iNuc_flow\beads\rough.map'
+	path = 'X:\data_folder\'
+	mapfile = 'X:\singlemolecules\smfret3color\example\beads.map'
 	color_number = 3		; 2 or 3 color
 	answer_need_mapping = "No"
 	answer_need_movie = "No"

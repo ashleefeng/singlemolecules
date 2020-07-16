@@ -29,7 +29,7 @@ gamma12=0.8730;  %1
 gamma23 = 2.62;
 gamma13=gamma12*gamma23;
 
-direct = 0.117; %ashlee: 0.1578;
+direct = 0.12;
 
 %% Options
 LaserOrderChange = 'y'; %Check this part when excitation laser order is matched.
@@ -59,7 +59,6 @@ if sum(size(fileinfo)) == 1
 end
 %date = fileinfo(1).date;
 fileid_log = fopen([filename_head '.log'],'r');		%% .log file
-%fileid_log = fopen(['hel1.log'],'r');	
 logarray = textscan(fileid_log, '%s', 'Delimiter','\n');
 timeunit = 0.001*str2double(logarray{1,1}{strmatch('Exposure Time [ms]', logarray{1,1})+1});
 gain = str2double(logarray{1,1}{strmatch('Gain', logarray{1,1})+1}); 

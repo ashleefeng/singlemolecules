@@ -1,6 +1,6 @@
-%Analyze traces in batches to make FRET histograms
+% Analyze traces in batches to make FRET histograms
 % X. Feng, modified from M. Poyton
-% July 9, 2019
+% updated July 16, 2020
 
 clear;
 close all;
@@ -19,20 +19,19 @@ dbackground_2=0;
 d2background_2=0;
 abackground_2=0;
 
-leakage12=0.1066;   %0.11
+leakage12=0.1066;
 leakage21=0.0;
-leakage13=0.0083;   %0.013
-leakage23=0.0446;   %0.12
+leakage13=0.0083;
+leakage23=0.0446;
 
-gamma12=0.8730;  %1
-gamma23 = 2.62; 
+gamma12=0.8730;
+gamma23 = 2.62;
 gamma13=gamma12*gamma23;
 
-direct = 0.117; %ashlee: 0.1578;   %0.19
-
+direct = 0.12;
 
 %read data
-pth=input('directory [default=C:\\User\\tir data\\yyyy\\New Folder]  ');
+pth=input('directory [default = current directory]  ');
 if isempty(pth)
     pth=pwd;
 end
@@ -76,13 +75,11 @@ for i=1:nf
             index=(1:Ntraces*len);
             disp('The number of traces_background is: ')
             disp(Ntraces/3);
-            %tempraw2 is a linear array, looks like it
             raw2=fread(fid2,Ntraces*len,'int16');
             disp('Done reading data.');
             fclose(fid2);
             tempData(index)=raw2(index);
             Data_b = [Data_b' tempData(:, 1:30)']';
-            %Data_b = [Data_b' tempData']';
         end
         if s(end-7:end) == 'w.traces'
             disp(s);
@@ -96,17 +93,15 @@ for i=1:nf
             Ntraces=fread(fid,1,'int16');
             tempData=zeros(Ntraces,len);
             index=(1:Ntraces*len);
-            disp('The number of traces_raw is: ')
+            disp('The number of traces_raßw is: ')
             disp(Ntraces/3);
             region2numTraces = [region2numTraces Ntraces/3];
-            %tempraw2 is a linear array, looks like it
             raw=fread(fid,Ntraces*len,'int16');
             disp('Done reading data.');
             fclose(fid);
             
             tempData(index)=raw(index);
             Data_r = [Data_r' tempData(:, 1:30)']';
-            %Data_r = [Data_r' tempData']';
         end
     end
 end
@@ -239,18 +234,13 @@ hist(AcceptorCorrect_2(:,1),80);
 title('750 laser, Cy7 Em');
 [cy7_x, cy7_y] = ginput(2);
 
-% subplot(4,1,4);
-% hist(AvAcceptorRawData_0(:,1),80);
-% title('Green laser, Cy7 Em');
-% [cy37fret_x, cy37fret_y] = ginput(2);
-
 % filter for spots of interest
 molec_with_cy3 = false(N_mol, 1);
 molec_with_cy5 = false(N_mol, 1);
 molec_with_cy7 = false(N_mol, 1);
 molec_with_cy3cy7fret = false(N_mol, 1);
 
-for i = 1:N_mol
+for i = 1: N_mol
     
     % has cy3
     if EachTotalCorrect_0(i, 1) > cy357_x(1) && EachTotalCorrect_0(i, 1) < cy357_x(2) 
@@ -267,9 +257,6 @@ for i = 1:N_mol
         molec_with_cy7(i) = true;
     end
     
-%     if AvAcceptorRawData_0(i, 1) > cy37fret_x(1) && AvAcceptorRawData_0(i, 1) < cy37fret_x(2)
-%         molec_with_cy3cy7fret(i) = true;
-%     end
 end
 
 diary colocalization_analysis.txt
@@ -316,12 +303,11 @@ diary off
 f1 = figure;
 histogram(fret01(molec_with_cy3 & molec_with_cy5), 'BinWidth', 0.025);
 xlim([-0.2 1.2]);
-%ylim([0 600]);
 title('Cy3 Cy5 FRET');
 xlabel('FRET Efficiency');
 ylabel('Count');
 set(gca,'FontSize',20);
-saveas(f1, 'Cy3 Cy5 FRET ver2.png')
+saveas(f1, 'Cy3 Cy5 FRET.png')
 
 % Cy5-Cy7 FRET histogram
 
@@ -332,35 +318,21 @@ title('Cy5 Cy7 FRET');
 xlabel('FRET Efficiency');
 ylabel('Count');
 set(gca,'FontSize',20);
-saveas(f2, 'Cy5 Cy7 FRET ver2.png')
-
-% Cy5-Cy7 FRET histogram for spots with Cy3 intensity
-
-f2 = figure;
-histogram(fret12(molec_with_cy5 & molec_with_cy7 & molec_with_cy3), 'BinWidth', 0.025);
-xlim([-0.2 1.2]);
-title('Cy5 Cy7 FRET');
-xlabel('FRET Efficiency');
-ylabel('Count');
-set(gca,'FontSize',20);
-saveas(f2, 'Cy5 Cy7 FRET ver2 filtered for Cy3.png')
+saveas(f2, 'Cy5 Cy7 FRET.png')
 
 f3 = figure;
-histogram(fret02(molec_with_cy3 & molec_with_cy7 & (~molec_with_cy5)), 'BinWidth', 0.04);
-%histogram(fret02(molec_with_cy3 & molec_with_cy7), 'BinWidth', 0.025);
+%histogram(fret02(molec_with_cy3 & molec_with_cy7 & (~molec_with_cy5)), 'BinWidth', 0.04);
+histogram(fret02(molec_with_cy3 & molec_with_cy7), 'BinWidth', 0.025);
 xlim([-0.2 1.2]);
 title('Cy3 Cy7 FRET');
 xlabel('FRET Efficiency');
 ylabel('Count');
 set(gca,'FontSize',20);
-saveas(f3, 'Cy3 Cy7 FRET ver2.png')
+saveas(f3, 'Cy3 Cy7 FRET.png')
 
 to_save01 = fret01(molec_with_cy3 & molec_with_cy5);
 to_save12 = fret12(molec_with_cy5 & molec_with_cy7);
-to_save12_ver2 = fret12(molec_with_cy5 & molec_with_cy7 & molec_with_cy3);
 to_save02 = fret02(molec_with_cy3 & molec_with_cy7);
-to_save02_ver2 = fret02(molec_with_cy3 & molec_with_cy7 & (~molec_with_cy5));
-%csvwrite('Cy3Cy5_fret_values_ver2.csv', to_save01);
-%csvwrite('Cy5Cy7_fret_values_ver2.csv', to_save12);
-%csvwrite('Cy3Cy7_fret_values_ver2.csv', to_save02_ver2);
-csvwrite('Cy5Cy7_fret_values_ver2_filtered_for_cy3.csv', to_save12_ver2);
+csvwrite('Cy3Cy5_fret_values.csv', to_save01);
+csvwrite('Cy5Cy7_fret_values.csv', to_save12);
+csvwrite('Cy3Cy7_fret_values.csv', to_save02);
